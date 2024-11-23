@@ -1,12 +1,27 @@
-document.addEventListener('scroll', () => bottomscrolled(document.querySelector('#posts')));
-async function bottomscrolled(targetDiv) {
+document.addEventListener('scroll', bottomscrolled);
+async function bottomscrolled(e) {
     const scrollPosition = window.scrollY + window.innerHeight,
         pageHeight = document.documentElement.scrollHeight,
         atbottom = (scrollPosition >= pageHeight);
 
     if (!atbottom) return;
 
-    window.electronAPI.getnewposts();
+    // get the current div
+    const targetDiv = document.querySelector('.content.active')
+
+    switch (targetDiv.id) {
+        case 'posts': window.electronAPI.getnewposts();
+            break;
+        case 'replies': window.electronAPI.getReplies()
+            break;
+        case 'likes': window.electronAPI.getnewlikes();
+            break;
+        case 'media':
+            window.electronAPI.getnewmedia();
+            break;
+
+        default: console.log(`unknown scroll div ID ${targetDiv.id}`);
+    }
 }
 
 // function to toggle the active section
@@ -24,16 +39,55 @@ function showSection(sectionId) {
     // show the selected section and activate the button
     document.getElementById(sectionId).classList.add('active');
     document.getElementById(sectionId + 'Btn').classList.add('active');
+
+    createDropdown();
 }
+
+
+function createDropdown() {
+    document.querySelector('.dropdown')?.remove();
+
+    const activeDiv = document.querySelector('.content.active');
+    if (activeDiv.id === 'replies') return;
+
+    const dropdown = document.createElement('div');
+    dropdown.classList.add('dropdown');
+
+    const button = document.createElement('button');
+    button.classList.add('dropdown-button');
+    button.textContent = 'Layout: Compact';
+
+    const content = document.createElement('div');
+    content.classList.add('dropdown-content');
+    content.id = 'layoutDropdown';
+
+    const options = [
+        { text: 'Large', value: 'large' },
+        { text: 'Relaxed', value: 'relaxed' },
+        { text: 'Compact', value: 'compact', selected: true }
+    ];
+
+    options.forEach(({ text, value, selected }) => {
+        const link = document.createElement('a');
+        link.href = '#';
+        link.dataset.value = value;
+        link.textContent = text;
+        if (selected) link.classList.add('selected');
+        link.addEventListener('click', togglerelaxed);
+        content.appendChild(link);
+    })
+
+    dropdown.append(button, content);
+    activeDiv.prepend(dropdown);
+}
+
 
 // function to handle layout selection
 function togglerelaxed(e) {
     e.preventDefault(); // prevent the default anchor behavior
 
-    const value = e.target.getAttribute('data-value');
-    const container = document.querySelector(`#${sessionStorage.getItem('currenttab') || 'cardscontainer'}`);
-
-    console.log(value)
+    const container = document.querySelector('.content.active [class*="cards-container"]'),
+        value = e.target.getAttribute('data-value');
 
     if (!container) return console.warn('container not found!');
 
@@ -50,9 +104,4 @@ function togglerelaxed(e) {
     document.querySelector('.dropdown-button').textContent = `Layout: ${value.charAt(0).toUpperCase() + value.slice(1)}`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // event listener for dropdown items
-    document.querySelectorAll('#layoutDropdown a').forEach(item => {
-        item.addEventListener('click', togglerelaxed);
-    });
-});
+document.addEventListener('DOMContentLoaded', createDropdown);

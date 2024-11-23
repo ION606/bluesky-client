@@ -133,6 +133,7 @@ async function getUserData(utag, allData = false) {
             output.likesCursor = likesCursor;
             output.posts = feed;
             output.postcursor = cursor;
+            output.media = await getMedia(utag);
 
             output.replies = await getReplies(utag);
         }
@@ -161,8 +162,27 @@ export const getPosts = async (utag, cursor = undefined, likesCursor = undefined
 }
 
 
+export const getLikes = async (utag, cursor = undefined) => {
+    try {
+        const did = await getDID(utag);
+        if (!did) return { err: 'DID not found!' };
+
+        const data = await agent.getActorLikes({ actor: did, cursor });
+
+        // sloppy fix, opened an issue at https://github.com/bluesky-social/atproto/issues/3087
+        if (!data.data.feed.length) delete data.data.cursor;
+        return data.data;
+    }
+    catch (err) {
+        console.error(err);
+        return null;
+    }
+}
+
+
 export const getReplies = async (utag, cursorInit, limit = 20) => {
     const did = await getDID(utag);
+
     let posts = await agent.getAuthorFeed({ actor: did, limit: limit, includePins: true, cursor: cursorInit });
     let cursor = posts.data.cursor;
     const replies = posts.data.feed.filter(o => o.reply);
@@ -181,15 +201,16 @@ export const getMedia = async (utag, cursorInit, limit = 20) => {
     const did = await getDID(utag);
     let posts = await agent.getAuthorFeed({ actor: did, limit: limit, includePins: true, cursor: cursorInit });
     let cursor = posts.data.cursor;
-    const replies = posts.data.feed.filter(o => o.reply);
+    const f = o => (o.post.embed?.images?.length || (o.post?.post?.embed?.$type === 'app.bsky.embed.video#view')),
+        data = posts.data.feed.filter(f);
 
-    while (cursor && replies.length < limit) {
+    while (cursor && data.length < limit) {
         posts = await agent.getAuthorFeed({ actor: did, limit, includePins: true, cursor });
-        replies.push(...posts.data.feed.filter(o => o.reply));
+        data.push(...posts.data.feed.filter(f));
         cursor = posts.data.cursor;
     }
 
-    return { replies, cursor };
+    return { data, cursor };
 }
 
 
@@ -225,10 +246,20 @@ export async function setupIPC() {
         clearCache();
     });
 
+    ipcMain.handle('getlikes', async (e, utag, cursor) => {
+        if (!cursor) return e.sender.send(404);
+        e.sender.send('likes', await getLikes(utag, cursor));
+    });
+
+    ipcMain.handle('getmedia', async (e, utag, cursor) => {
+        if (!cursor) return e.sender.send(404);
+        e.sender.send('media', await getMedia(utag, cursor));
+    });
+
     ipcMain.handle('get-connections', getConnections);
 
     ipcMain.handle('gethistory', (e, limit, offset) => e.sender.send('history', JSON.stringify(getHistory(limit, offset))));
-    ipcMain.handle('getreplies', async (e, limit, offset) => e.sender.send('replies', JSON.stringify(await getReplies(limit, offset))));
+    ipcMain.handle('getreplies', async (e, cursor, utag, limit = 20) => e.sender.send('replies', JSON.stringify(await getReplies(utag, cursor, limit))));
     ipcMain.handle('getvideo', async (e, oldurl) => {
         const newURL = await convertAndServe(`${crypto.randomUUID()}.mp4`, oldurl);
         e.sender.send('video', oldurl, newURL);

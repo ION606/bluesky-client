@@ -86,11 +86,9 @@ function createPostPreview(post, isParent = false) {
 }
 
 
-module.exports = function renderReplies(replyObj) {
+module.exports = function renderReplies({ cursor, replies }) {
     const repliesContainer = document.querySelector('#replies');
     repliesContainer.querySelector('.placeholder')?.remove();
-
-    const { cursor, replies } = replyObj;
 
     if (cursor) sessionStorage.setItem('repliescursor', cursor);
     else sessionStorage.removeItem('repliescursor');

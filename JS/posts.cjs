@@ -559,6 +559,47 @@ function renderPostSingle(post, a, likes, ipcRenderer, container, idkey = 'bskyi
 		}
 	}
 
+	if (post.post.embed && post.post.embed.$type === 'app.bsky.embed.external#view') {
+		const embedContainer = document.createElement('div'),
+			embed = post.post.embed.external;
+
+		embedContainer.classList.add('external-embed-container');
+
+		// thumbnail (if exists)
+		if (embed.thumb) {
+			const thumbnail = document.createElement('img');
+			thumbnail.classList.add('external-embed-thumb');
+			thumbnail.src = embed.thumb;
+			thumbnail.alt = `${embed.title} thumbnail`;
+			embedContainer.appendChild(thumbnail);
+		}
+
+		// title
+		const titleElement = document.createElement('h3');
+		titleElement.classList.add('external-embed-title');
+		titleElement.textContent = embed.title;
+
+		// description
+		const descriptionElement = document.createElement('p');
+		descriptionElement.classList.add('external-embed-description');
+		descriptionElement.textContent = embed.description;
+
+		// link
+		const linkElement = document.createElement('a');
+		linkElement.classList.add('external-embed-link');
+		linkElement.href = embed.uri;
+		linkElement.target = '_blank'; // opens in a new tab
+		linkElement.rel = 'noopener noreferrer'; // improves security
+		linkElement.textContent = 'Visit';
+
+		// append elements to the container
+		embedContainer.appendChild(titleElement);
+		embedContainer.appendChild(descriptionElement);
+		embedContainer.appendChild(linkElement);
+
+		card.appendChild(embedContainer);
+	}
+
 	// interaction counts
 	if (!card.querySelector('.interaction-counts')) {
 		const counts = document.createElement('div');
@@ -585,7 +626,6 @@ function renderPostSingle(post, a, likes, ipcRenderer, container, idkey = 'bskyi
  * @param {*} ipcRenderer 
  */
 module.exports = function renderPosts(posts, likes, pinnedPost, ipcRenderer, idkey = 'bskyid', containerid = 'posts') {
-	console.log(`${idkey}, ${containerid}container, ${posts.length}`);
 	let container;
 	/** @type {Map<String, Element>} */
 	let a;
@@ -596,14 +636,26 @@ module.exports = function renderPosts(posts, likes, pinnedPost, ipcRenderer, idk
 	else {
 		container = document.createElement('div');
 		container.classList.add('cards-container');
-		container.id = containerid;
+		container.id = `${containerid}container`;
 		a = new Map();
 	}
 
-	// setupWorker();
-	// renderLikesFeed(posts.map(p => (p?.reply?.root?.uri || p.post.uri)?.trim()), likes, ipcRenderer);
-
-	for (const post of posts) renderPostSingle(post, a, likes.map(o => ({ posturi: o.post.uri, likeuri: o.post.viewer?.like })), ipcRenderer, container, idkey, containerid);
+	for (const post of posts) {
+		try {
+			renderPostSingle(
+				post,
+				a,
+				likes.map(o => ({ posturi: o.post.uri, likeuri: o.post.viewer?.like })),
+				ipcRenderer,
+				container,
+				idkey,
+				containerid
+			);
+		}
+		catch (err) {
+			console.error(err);
+		}
+	}
 
 	const postids = Array.from(document.querySelectorAll(`[data-${idkey}]`)).map(o => o.dataset[`${idkey} `]);
 	console.log(postids);
@@ -614,6 +666,8 @@ module.exports = function renderPosts(posts, likes, pinnedPost, ipcRenderer, idk
 	a = null;
 
 	if (pinnedPost) {
+		console.log("PINNED", posts.find(p => p.post.uri === pinnedPost.uri));
+
 		const pinnedcard = container.querySelector(`[data-${idkey}="${pinnedPost.uri}"]`);
 		if (pinnedcard) {
 			const pinnedLabel = document.createElement('div');

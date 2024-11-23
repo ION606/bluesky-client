@@ -2,7 +2,6 @@ const { contextBridge, ipcRenderer } = require('electron');
 const { populateProfile, Profile } = require('../JS/Profile.cjs');
 const renderPosts = require('../JS/posts.cjs');
 const renderReplies = require('../JS/replies.cjs');
-const renderLikes = require('../JS/likes.cjs');
 const { displayUploadStatus, renderCompose } = require('../JS/compose.cjs');
 
 async function handleFileDialogue(e) {
@@ -35,6 +34,15 @@ async function handleFileDialogue(e) {
     }
 }
 
+const appendEOF = (divid) => {
+    if (document.getElementById(divid)?.querySelector('.eof')) return;
+    else {
+        const d = document.createElement('div');
+        d.className = 'eof';
+        d.innerHTML = '<h2>Reached end of feed!</h2>';
+        document.getElementById(divid)?.appendChild(d);
+    }
+}
 
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -52,7 +60,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
         console.log(data);
         if (data.postcursor) sessionStorage.setItem('postcursor', data.postcursor);
-        if (data.likesCursor) sessionStorage.setItem('likescursor', data.likesCursor);
+        if (data.likesCursor) {
+            sessionStorage.setItem('likescursor', data.likesCursor);
+            sessionStorage.setItem('likesfeedcursor', data.likesCursor);
+        }
+        if (data.media.cursor) sessionStorage.setItem('mediacursor', data.media.cursor);
 
         document.querySelector('#loading')?.remove();
         populateProfile(pObj);
@@ -60,6 +72,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if (data.posts) renderPosts(data.posts, data.likes || [], pObj?.pinnedPost, ipcRenderer);
         if (data.replies) renderReplies(data.replies);
         if (data.likes) renderPosts(data.likes, data.likes, null, ipcRenderer, 'bskylikeid', 'likes');
+        if (data.media) renderPosts(data.media.data, data.likes, null, ipcRenderer, 'bskymediaid', 'media');
     });
 
     contextBridge.exposeInMainWorld('electronAPI', {
@@ -68,29 +81,25 @@ window.addEventListener('DOMContentLoaded', () => {
                 likescursor = sessionStorage.getItem('likescursor');
 
             if (cursor) ipcRenderer.invoke('getposts', utag, cursor, likescursor);
-            else if (document.querySelector('#eof')) return;
-            else {
-                const d = document.createElement('div');
-                d.id = 'eof';
-                d.innerHTML = '<h2>Reached end of feed!</h2>';
-                document.querySelector('#posts')?.appendChild(d);
-            }
+            else appendEOF('posts');
         },
         getnewlikes: () => {
-            return alert("TODO (check TODO.txt)");
-            const cursor = sessionStorage.getItem('postcursor');
+            const cursor = sessionStorage.getItem('likesfeedcursor');
 
-            if (cursor) ipcRenderer.invoke('getposts', utag, cursor, likescursor);
-            else if (document.querySelector('#eof')) return;
-            else {
-                const d = document.createElement('div');
-                d.id = 'eof';
-                d.innerHTML = '<h2>Reached end of feed!</h2>';
-                document.querySelector('#posts')?.appendChild(d);
-            }
+            if (cursor) ipcRenderer.invoke('getlikes', utag, cursor);
+            else appendEOF('likes');
         },
         getHistory: (cursor = undefined) => ipcRenderer.invoke('gethistory', cursor),
-        getReplies: (cursor = undefined) => ipcRenderer.invoke('getreplies', cursor),
+        getReplies: (utag) => {
+            const cursor = sessionStorage.getItem('repliescursor');
+            if (cursor) ipcRenderer.invoke('getreplies', cursor, utag);
+            else appendEOF('replies');
+        },
+        getnewmedia: (utag) => {
+            const cursor = sessionStorage.getItem('mediacursor');
+            if (cursor) ipcRenderer.invoke('getmedia', cursor, utag);
+            else appendEOF('media');
+        },
         getVideo: (src) => ipcRenderer.invoke('getvideo', src),
     });
 
@@ -110,6 +119,23 @@ window.addEventListener('DOMContentLoaded', () => {
 
         if (data.cursor) sessionStorage.setItem('postcursor', data.cursor);
         else sessionStorage.removeItem('postcursor');
+    });
+
+    ipcRenderer.on('likes', (e, data) => {
+        // reset all videos because the cache was cleared
+        document.querySelectorAll('.post-card video').forEach(video => {
+            video.src = '../assets/video-loading.mp4';
+            video.pause();
+            video.currentTime = 0;
+        });
+
+        if (data.err) return alert(data.err);
+
+        console.log(data);
+        renderPosts(data.feed, data.feed, null, ipcRenderer, 'bskylikeid', 'likes');
+
+        if (data.cursor) sessionStorage.setItem('likesfeedcursor', data.cursor);
+        else sessionStorage.removeItem('likesfeedcursor');
     });
 
     ipcRenderer.on('history', (e, data) => {

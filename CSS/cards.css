@@ -239,6 +239,7 @@
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s ease;
+    z-index: 9999;
 }
 
 .compose-button:hover {
@@ -317,4 +318,59 @@
     padding: 8px;
     text-align: left;
     font-size: 0.9em;
+}
+
+/* container for the external embed */
+.external-embed-container {
+    border: 2px solid #4e004e;
+    border-radius: 8px;
+    padding: 16px;
+    max-width: 400px;
+    margin: 16px auto;
+    background-color: #2e003e;
+    color: #e6e6ff;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+/* thumbnail styling */
+.external-embed-thumb {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* title styling */
+.external-embed-title {
+    font-size: 1.5em;
+    margin: 0 0 8px 0;
+    color: #ffcc00;
+}
+
+/* description styling */
+.external-embed-description {
+    font-size: 1em;
+    margin: 0 0 16px 0;
+    color: #e6e6ff;
+}
+
+/* link styling */
+.external-embed-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #4e004e;
+    color: #ffcc00;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.external-embed-link:hover {
+    background-color: #ffcc00;
+    color: #4e004e;
 }
