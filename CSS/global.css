@@ -1,0 +1,68 @@
+/* global styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #1a001a;
+    color: #e6e6ff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.noscroll {
+    overflow: hidden;
+    height: 100%;
+}
+
+img {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.convcont {
+    text-align: center;
+    color: #b399ff; /* light purple color for visual separation */
+    margin: 8px 0; /* vertical space around the separator */
+    letter-spacing: 2px; /* spacing for the dots */
+    opacity: 0.9;
+    font-size: 1em;
+}
+
+
+#eof {
+    text-align: center;
+}
+
+/* styling for user links, e.g., @username */
+.user-link {
+    color: #d4b0ff; /* matches the light purple in your theme */
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.user-link:hover {
+    color: #b399ff; /* a slightly darker shade on hover */
+    text-decoration: underline;
+}
+
+/* styling for external links */
+.external-link {
+    color: #ff66ff; /* a vibrant color for external links */
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.external-link:hover {
+    color: #aa00ff; /* darker shade on hover */
+    text-decoration: underline;
+}

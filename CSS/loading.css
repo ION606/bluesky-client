@@ -1,0 +1,27 @@
+/* container for the loading image */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #333; /* keep background color */
+    z-index: 9999999999999999;
+  }
+
+  /* loading image styling */
+  #loading img {
+    max-width: 50%;
+    height: auto;
+    /* responsive resizing */
+  }
+
+  /* for small screens, adjust the loading image size */
+  @media (max-width: 600px) {
+    #loading img {
+      max-width: 60%;
+    }
+  }

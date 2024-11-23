@@ -1,0 +1,195 @@
+/* basic styles for the video container and controls */
+.video-container {
+    position: relative;
+    width: 640px;
+    max-width: 100%;
+    background-color: black;
+}
+
+.video-element {
+    width: 100%;
+    height: auto;
+}
+
+.controls {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 3px;
+    /* background: rgba(0, 0, 0, 0.7); */
+    z-index: 10;
+}
+
+.progress-bar {
+    width: 100%;
+}
+
+button,
+input[type="range"] {
+    cursor: pointer;
+}
+
+/* style for the play/pause button */
+.play-pause {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* triangle icon for "Play" */
+.play-pause.play::before {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 12px solid white;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+}
+
+/* double bars for "Pause" */
+.play-pause.pause::before,
+.play-pause.pause::after {
+    content: '';
+    width: 4px;
+    height: 16px;
+    background-color: white;
+    display: inline-block;
+    margin: 0 2px;
+}
+
+
+/* fullscreen button styling */
+.fullscreen {
+    font-size: 120%;
+    color: white;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* enter fullscreen icon */
+.fullscreen.enter::before {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid white;
+    border-top: none;
+    border-left: none;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+
+/* exit fullscreen icon */
+.fullscreen.exit::before {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid white;
+    border-bottom: none;
+    border-right: none;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+
+.play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
+    color: white;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+input[type="range"] {
+    /* palegoldenrod */
+    accent-color: rgb(170, 10, 117);
+    /* background: linear-gradient(90deg, #a200ff var(--progress), #1e9e04 var(--progress));
+    -webkit-appearance: none;
+    border: solid 1px #82CFD0;
+    border-radius: 8px;
+    transition: background 450ms ease-in; */
+}
+
+.video-container {
+    position: relative;
+    width: 640px;
+    max-width: 100%;
+    background-color: black;
+}
+
+.video-element {
+    width: 100%;
+    height: auto;
+}
+
+.controls {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 3px;
+    z-index: 10;
+}
+
+.progress-bar {
+    width: 100%;
+}
+
+button,
+input[type="range"] {
+    cursor: pointer;
+}
+
+.play-pause {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.fullscreen {
+    font-size: 120%;
+    color: white;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.volume-container {
+    position: relative;
+}
+
+.volume-button {
+    font-size: 18px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    width: 40px;
+    height: 40px;
+}

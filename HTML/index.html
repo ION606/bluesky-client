@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Display</title>
+
+    <link rel="stylesheet" href="../CSS/global.css">
+    <link rel="stylesheet" href="../CSS/loading.css">
+    <link rel="stylesheet" href="../CSS/profile.css">
+    <link rel="stylesheet" href="../CSS/tabs.css">
+    <link rel="stylesheet" href="../CSS/cards.css">
+    <link rel="stylesheet" href="../CSS/dropdown.css">
+    <link rel="stylesheet" href="../CSS/zoom.css">
+    <link rel="stylesheet" href="../CSS/replies.css">
+    <link rel="stylesheet" href="../CSS/video.css">
+    <link rel="stylesheet" href="../CSS/compose.css">
+    <link rel="stylesheet" href="../CSS/post.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script src="../JS/posts.cjs"></script>
+    <script src="../JS/script.js"></script>
+    <script src="../JS/compose.cjs"></script>
+    <script src="../src/renderer.cjs"></script>
+</head>
+
+<body>
+    <div id="loading">
+        <!-- sourced from https://xaydungso.vn/blog/20-mau-loading-gif-cute-dang-yeu-nhat-cho-website-cua-ban-en-in.html -->
+        <img src="../assets/loading-transparent.gif">
+    </div>
+    <div id="imgzoom" class="zoom-container zoomed">
+        <img src="" alt="Zoomable Image" class="zoom-image" />
+        <video src="" alt="Zoomable VIdeo" class="zoom-video" controls></video>
+    </div>
+    <div class="overlay hidden"></div>
+
+    <div class="profile-container">
+        <div class="banner">
+            <img id="banner-img" src="" alt="Profile Banner">
+        </div>
+        <div class="profile-content">
+            <img id="avatar-img" class="avatar" src="" alt="Avatar">
+            <h1 id="handle">User Handle</h1>
+            <p id="description">User description goes here.</p>
+            <div class="counts">
+                <span id="followersCount">100</span> Followers |
+                <span id="followsCount">150</span> Following |
+                <span id="postsCount">50</span> Posts
+            </div>
+        </div>
+
+        <!-- Toggle Buttons for Sections -->
+        <div class="tab-buttons">
+            <button id="postsBtn" class="active" onclick="showSection('posts')">Posts</button>
+            <button id="repliesBtn" onclick="showSection('replies')">Replies</button>
+            <button id="mediaBtn" onclick="showSection('media')">Media</button>
+            <button id="likesBtn" onclick="showSection('likes')">Likes</button>
+            <button id="bookmarksBtn" onclick="showSection('bookmarks')">Bookmarks</button>
+        </div>
+
+        <!-- Section Content -->
+        <div id="posts" class="content active">
+            <p class="placeholder">nothing here...</p>
+            <div class="dropdown">
+                <button class="dropdown-button">Layout: Compact</button>
+                <div class="dropdown-content" id="layoutDropdown">
+                    <a href="#" data-value="large">Large</a>
+                    <a href="#" data-value="relaxed">Relaxed</a>
+                    <a href="#" data-value="compact" class="selected">Compact</a>
+                </div>
+            </div>
+            <button id="composebtn" class="compose-button">
+                <i class="fa-solid fa-pen"></i>
+            </button>
+
+            <div id="overlay"></div>
+            <div id="new-post-form" aria-labelledby="new-post-label">
+                <form id="postForm">
+                    <label id="new-post-label" for="postContent">New Post:</label>
+                    <button type="button" id="closeButton" aria-label="Close form">✕</button>
+
+                    <!-- main post content -->
+                    <textarea id="postContent" placeholder="What's on your mind?" aria-label="Post content"></textarea>
+
+                    <!-- file upload button -->
+                    <button type="button" id="fileButton" aria-label="Upload a file">
+                        <i class="fa-regular fa-image"></i>
+                    </button>
+                    <input type="file" id="postFile" aria-label="Upload a file" style="display: none;" />
+
+                    <!-- gif upload button -->
+                    <button type="button" id="gifButton" aria-label="Add a GIF">
+                        GIF
+                    </button>
+
+                    <!-- audio upload button -->
+                    <button type="button" id="audioButton" aria-label="Upload audio">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                    <input type="file" id="postAudio" accept="audio/*" aria-label="Upload an audio file"
+                        style="display: none;" />
+
+                    <input type="text" id="postGif" placeholder="GIF URL" aria-label="Enter GIF URL"
+                        style="display: none;" />
+
+                    <button id="showEmbedButton" type="button"><i class="fas fa-link"></i></button>
+
+                    <div id="embedWidget" class="embed-widget">
+                        <label for="embedUri">URI:</label>
+                        <input type="url" id="embedUri" placeholder="https://example.com">
+
+                        <label for="embedTitle">Title:</label>
+                        <input type="text" id="embedTitle" placeholder="Enter title">
+
+                        <label for="embedDescription">Description:</label>
+                        <input type="text" id="embedDescription" placeholder="Enter description">
+
+                        <button type="button" aria-label="Upload a file"
+                            onclick="document.querySelector('#embedImage').click()">
+                            <i class="fa-regular fa-image"></i>
+                        </button>
+                        <input type="file" id="embedImage" aria-label="Upload a file" style="display: none;" />
+
+                    </div>
+
+                    <div id="uploadStatus"></div>
+
+                    <button type="submit">Post</button>
+                </form>
+                <p id="statusMessage" aria-live="polite"></p>
+            </div>
+
+        </div>
+        <div id="replies" class="content">
+            <p class="placeholder">nothing here...</p>
+        </div>
+        <div id="media" class="content">
+            <p class="placeholder">nothing here...</p>
+        </div>
+        <div id="likes" class="content">
+            <p class="placeholder">nothing here...</p>
+        </div>
+        <div id="bookmarks" class="content">
+            <p class="placeholder">nothing here...</p>
+        </div>
+    </div>
+
+    <div class="dmselpopup" id="dmPopup">
+        <button class="close-btn" onclick="document.querySelector('#dmPopup').classList.remove('active')">✖</button>
+        <h2>Select a DM</h2>
+        <div id="dmList"></div>
+    </div>
+</body>
+
+</html>

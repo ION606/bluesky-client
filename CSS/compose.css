@@ -1,0 +1,160 @@
+/* overlay backdrop */
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* darker overlay for dark theme */
+    z-index: 999;
+    transition: opacity 0.3s ease;
+}
+
+/* popup form styling for dark theme */
+#new-post-form {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #333; /* dark background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    max-width: 400px;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: #f1f1f1; /* light text for contrast */
+}
+
+/* show popup and overlay */
+#new-post-form.show, #overlay.show {
+    display: block;
+    opacity: 1;
+}
+
+/* form elements styling */
+#postContent, #postTitle, #postFile, #postGif, #postAudio {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #444; /* dark background for inputs */
+    border: 1px solid #666;
+    border-radius: 4px;
+    color: #f1f1f1; /* light text */
+    resize: vertical;
+}
+
+button[type="submit"] {
+    display: inline-block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #0077ff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #005bb5;
+}
+
+/* close button */
+#closeButton {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #f1f1f1; /* light color for dark background */
+    cursor: pointer;
+}
+
+
+/* button styling */
+button#fileButton, button#gifButton, button#audioButton {
+    background: #444; /* dark background for dark theme */
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    margin: 5px 0;
+    transition: background-color 0.3s ease;
+}
+
+button#fileButton:hover, button#gifButton:hover, button#audioButton:hover {
+    background-color: #555; /* slightly lighter on hover */
+}
+
+/* icon styling */
+button#fileButton img, button#gifButton img, button#audioButton img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+/* hide actual input fields */
+#postFile, #postGif, #postAudio {
+    display: none;
+}
+
+#new-post-form button {
+    color: white;
+}
+
+/* Updated Embed widget styling for dark theme */
+.embed-widget {
+    display: none; /* Hide by default */
+    border: 1px solid #666;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 20px;
+    background-color: #333; /* Dark background */
+    color: #f1f1f1; /* Light text for contrast */
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Input styling inside the widget for dark theme */
+.embed-widget input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    background-color: #444; /* Dark background for inputs */
+    border: 1px solid #666;
+    border-radius: 4px;
+    color: #f1f1f1; /* Light text */
+}
+
+/* Label styling */
+.embed-widget label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #f1f1f1; /* Light color for dark theme */
+}
+
+/* Button styling for adding an external embed */
+#showEmbedButton {
+    margin-top: 10px;
+    padding: 10px 16px;
+    font-size: 16px;
+    background-color: #007acc;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#showEmbedButton:hover {
+    background-color: #005bb5;
+}

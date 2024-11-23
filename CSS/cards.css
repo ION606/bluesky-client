@@ -1,0 +1,320 @@
+/* posts */
+/* container for all cards */
+.cards-container {
+    column-width: 280px; /* sets the width of each "column" */
+    column-gap: 16px; /* horizontal space between columns */
+    padding: 20px;
+    margin: auto;
+}
+
+.cards-container .post-card {
+    position: relative;
+    background-color: #2e003e;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: #e6e6ff;
+    font-family: Arial, sans-serif;
+    display: inline-block; /* makes each card flow naturally into columns */
+    margin-bottom: 16px; /* adds space between items vertically */
+    width: 100%; /* ensures card takes up the column width */
+}
+
+
+.cards-container-relaxed {
+    display: grid;
+    gap: 16px;
+    grid-auto-rows: auto; /* allows each card to be only as tall as its content */
+    grid-auto-flow: dense; /* fills in gaps with smaller items if available */
+    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    display: grid;
+}
+
+.cards-container-relaxed .post-card {
+    position: relative;
+    background-color: #2e003e;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: #e6e6ff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+}
+
+
+
+/* author section inside card */
+.author-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+/* avatar image styling */
+.card-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid #aa00ff;
+}
+
+/* author info */
+.author-info {
+    display: flex;
+    flex-direction: column;
+}
+
+/* display name and handle styling */
+.author-name {
+    font-size: 1em;
+    color: #d4b0ff;
+    margin: 0;
+}
+
+.author-handle {
+    font-size: 0.8em;
+    color: #b399ff;
+    margin: 0;
+}
+
+/* text content styling */
+.post-text {
+    overflow: hidden;
+    max-height: 200px; /* set a limit for text content */
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+
+/* styling for original post preview */
+.original-post {
+    background-color: #3d1c3d;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 8px;
+    width: 100%;
+    font-size: 0.8em;
+    color: #b399ff;
+}
+
+.original-author {
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #d4b0ff;
+}
+
+.original-text {
+    font-style: italic;
+    color: #e6e6ff;
+    margin: 4px 0;
+}
+
+.original-image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 4px;
+}
+
+/* interaction counts */
+.interaction-counts {
+    font-size: 0.8em;
+    color: #b399ff;
+    margin-top: 12px;
+    width: 100%;
+    text-align: right;
+}
+
+/* repost section styling */
+.repost-section {
+    display: flex;
+    align-items: center;
+    background-color: #3d1c3d;
+    padding: 8px;
+    border-radius: 8px 8px 0 0;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* repost avatar */
+.repost-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 8px;
+    border: 2px solid #ff66ff;
+}
+
+/* repost info */
+.repost-info .author-name {
+    font-size: 0.9em;
+    color: #d4b0ff;
+    margin: 0;
+}
+
+.repost-info .author-handle {
+    font-size: 0.8em;
+    color: #b399ff;
+    margin: 0;
+}
+
+/* styling for post image within card */
+.post-image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+
+
+/* pinned label styling */
+.pinned-label {
+    background-color: #ffcc00; /* bright color to make it noticeable */
+    color: #333;
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 8px; /* space below the label */
+}
+
+/* optional: distinct border for pinned card */
+.pinned-card {
+    border: 2px solid #ffcc00; /* match border with label color */
+    padding-top: 8px; /* adjust padding for the label */
+}
+
+/* container for video within post card */
+.video-container {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* video element styling */
+.post-video {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    background-color: #000;
+    outline: none;
+}
+
+/* add a slight shadow to the video container for depth */
+.video-container {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* hover effect to add a border around the video for focus */
+.video-container:hover {
+    border: 2px solid #aa00ff;
+    transition: border 0.3s ease;
+}
+
+/* compose button styling with icon */
+.compose-button {
+    position: fixed;
+    bottom: 20px;
+    right: 2%;
+    background-color: #6b006b;
+    color: #e6e6ff;
+    padding: 15px;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.5em;
+    cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.compose-button:hover {
+    background-color: #aa00ff;
+}
+
+/* button container styling */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+/* individual action buttons */
+.action-button {
+    background-color: #2a002e;
+    color: #e6e6ff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #4e004e;
+}
+
+/* specific styles for icons */
+.like-button {
+    color: #ff4d4d;
+}
+
+.delete-button {
+    color: #ff4d4d;
+}
+
+.dm-button {
+    color: #66ccff;
+}
+
+.copy-link-button {
+    color: #ffcc00;
+}
+
+.pin-button {
+    color: #ffcc00;
+}
+
+/* dropdown menu styling */
+.dropdown-menu {
+    position: absolute;
+    right: 13px;
+    background-color: #3d1c3d;
+    border-radius: 5px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+}
+
+/* hide dropdown menu initially */
+.hidden {
+    display: none;
+}
+
+/* dropdown action button styling */
+.dropdown-menu .action-button {
+    width: 100%;
+    padding: 8px;
+    text-align: left;
+    font-size: 0.9em;
+}

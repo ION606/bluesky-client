@@ -1,0 +1,36 @@
+/* styles for the tab buttons */
+.tab-buttons {
+    display: flex;
+    justify-content: space-around;
+    background-color: #1da1f2;
+    padding: 10px 0;
+}
+
+.tab-buttons button {
+    border: none;
+    background: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.tab-buttons button.active {
+    border-bottom: 3px solid white;
+}
+
+/* section styling */
+.content {
+    display: none;
+    padding: 20px;
+    background-color: #2e003e;
+}
+
+.content.active {
+    display: block;
+}
+
+/* Hide the full-screen button from videos */
+/* video::-webkit-media-controls-fullscreen-button {
+    display: none;
+} */
