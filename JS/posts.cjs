@@ -11,6 +11,7 @@ function zoomimg(e) {
 	zoomContainer.querySelector('img').src = src;
 	zoomContainer.classList.toggle('zoomed');
 	overlayEl.classList.toggle('hidden');
+	overlayEl.classList.toggle('show');
 	document.querySelector('.profile-container').classList.toggle('.noscroll');
 }
 
@@ -29,6 +30,7 @@ function zoomvid(e) {
 	zoomContainer.querySelector('video').src = src;
 	zoomContainer.classList.toggle('zoomed');
 	document.querySelector('.overlay').classList.toggle('hidden');
+	document.querySelector('.overlay').classList.toggle('show');
 	document.querySelector('.profile-container').classList.toggle('.noscroll');
 
 	const isZoomed = zoomContainer.classList.contains('zoomed');
@@ -569,33 +571,43 @@ function renderPostSingle(post, a, likes, ipcRenderer, container, idkey = 'bskyi
 		if (embed.thumb) {
 			const thumbnail = document.createElement('img');
 			thumbnail.classList.add('external-embed-thumb');
-			thumbnail.src = embed.thumb;
+
+			if (embed.uri.match(/\.gif(?:\?.*|$)/)) thumbnail.src = embed.uri
+			else thumbnail.src = embed.thumb;
+
 			thumbnail.alt = `${embed.title} thumbnail`;
 			embedContainer.appendChild(thumbnail);
 		}
 
-		// title
-		const titleElement = document.createElement('h3');
-		titleElement.classList.add('external-embed-title');
-		titleElement.textContent = embed.title;
+		// this is an image
+		if (embed.description.startsWith('ALT:') && embed.title === embed.description.substring(4).trim()) {
+			const thumbnail = embedContainer.querySelector('.external-embed-thumb');
+			thumbnail.alt = embed.description.substring(4).trim();
+		}
+		else {
+			// title
+			const titleElement = document.createElement('h3');
+			titleElement.classList.add('external-embed-title');
+			titleElement.textContent = embed.title;
 
-		// description
-		const descriptionElement = document.createElement('p');
-		descriptionElement.classList.add('external-embed-description');
-		descriptionElement.textContent = embed.description;
+			// description
+			const descriptionElement = document.createElement('p');
+			descriptionElement.classList.add('external-embed-description');
+			descriptionElement.textContent = embed.description;
 
-		// link
-		const linkElement = document.createElement('a');
-		linkElement.classList.add('external-embed-link');
-		linkElement.href = embed.uri;
-		linkElement.target = '_blank'; // opens in a new tab
-		linkElement.rel = 'noopener noreferrer'; // improves security
-		linkElement.textContent = 'Visit';
+			// link
+			const linkElement = document.createElement('a');
+			linkElement.classList.add('external-embed-link');
+			linkElement.href = embed.uri;
+			linkElement.target = '_blank'; // opens in a new tab
+			linkElement.rel = 'noopener noreferrer'; // improves security
+			linkElement.textContent = 'Visit';
 
-		// append elements to the container
-		embedContainer.appendChild(titleElement);
-		embedContainer.appendChild(descriptionElement);
-		embedContainer.appendChild(linkElement);
+			// append elements to the container
+			embedContainer.appendChild(titleElement);
+			embedContainer.appendChild(descriptionElement);
+			embedContainer.appendChild(linkElement);
+		}
 
 		card.appendChild(embedContainer);
 	}

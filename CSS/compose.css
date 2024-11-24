@@ -1,5 +1,5 @@
 /* overlay backdrop */
-#overlay {
+#overlay, .overlay {
     display: none;
     position: fixed;
     top: 0;
@@ -31,7 +31,7 @@
 }
 
 /* show popup and overlay */
-#new-post-form.show, #overlay.show {
+#new-post-form.show, #overlay.show, .overlay.show {
     display: block;
     opacity: 1;
 }

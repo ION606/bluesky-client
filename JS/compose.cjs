@@ -1,5 +1,7 @@
 // set up the overlay and form toggling
 async function setup() {
+    if (document.querySelector('#overlay')) return;
+
     const composeButton = document.querySelector('#composebtn');
     const newPostForm = document.querySelector('#new-post-form');
     const overlay = document.createElement('div');
