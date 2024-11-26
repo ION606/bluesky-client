@@ -1,6 +1,9 @@
 const isURL = (ustr) => {
-    try { return new URL(ustr) }
-    catch (err) { return null }
+    try {
+        const validProtocols = ['http:', 'https:', 'ftp:', 'ftps:', 'sftp:', 'ws:', 'wss:', 'mailto:', 'tel:', 'file:', 'data:', 'irc:', 'geo:', 'rtsp:', 'magnet:'],
+            url = new URL(ustr);
+        return validProtocols.includes(url.protocol) ? url : false;
+    } catch { return false; }
 }
 
 

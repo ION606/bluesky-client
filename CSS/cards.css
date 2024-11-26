@@ -18,6 +18,7 @@
     display: inline-block; /* makes each card flow naturally into columns */
     margin-bottom: 16px; /* adds space between items vertically */
     width: 100%; /* ensures card takes up the column width */
+    cursor: pointer;
 }
 
 
@@ -130,6 +131,7 @@
     margin-top: 12px;
     width: 100%;
     text-align: right;
+    cursor: default;
 }
 
 /* repost section styling */
@@ -251,6 +253,7 @@
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
+    cursor: default;
 }
 
 /* individual action buttons */
@@ -373,4 +376,17 @@
 .external-embed-link:hover {
     background-color: #ffcc00;
     color: #4e004e;
+}
+
+.external-embed-container img {
+    width: -webkit-fill-available;
+}
+
+.notallowed {
+    cursor: not-allowed !important;
+    color: #737373 !important;
+}
+
+.notallowed:hover {
+    background-color: transparent !important;
 }

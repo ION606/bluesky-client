@@ -1,0 +1,228 @@
+/* General Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #1a001a; /* Dark purple background */
+    color: #e6e6ff; /* Light text for readability */
+}
+
+#post-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Card Styles */
+.post-card, .reply-card, .pinned-card {
+    background: #2a002e; /* Slightly lighter purple for cards */
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+    padding: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+}
+
+/* Author Section */
+.author-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.card-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #ffcc00; /* Golden border */
+}
+
+.author-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #ffcc00; /* Golden for emphasis */
+    margin: 0;
+}
+
+.author-handle {
+    font-size: 0.9rem;
+    color: #b399ff; /* Muted light purple */
+    margin: 0;
+}
+
+/* Post Content */
+.post-text {
+    margin: 16px 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    word-wrap: break-word;
+    color: #e6e6ff; /* Standard text color */
+}
+
+/* Media Embeds */
+.post-image, .reply-image {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.post-video {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 12px;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* External Links */
+.external-embed-container {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #3d1c3d;
+    color: #e6e6ff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.external-embed-title {
+    font-weight: bold;
+    color: #ffcc00;
+    margin: 0 0 8px;
+}
+
+.external-embed-description {
+    font-size: 0.9rem;
+    margin: 0 0 8px;
+    color: #b399ff;
+}
+
+.external-embed-link {
+    color: #ffcc00;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.external-embed-link:hover {
+    text-decoration: underline;
+}
+
+.external-embed-container img {
+    width: -webkit-fill-available;
+}
+
+/* Interaction buttons */
+.interaction-section {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 12px;
+}
+
+.interaction-button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #b399ff; /* Muted light purple for buttons */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.interaction-button:hover {
+    color: #ffcc00; /* Golden hover effect for buttons */
+    transform: scale(1.1); /* Slightly enlarge button on hover */
+}
+
+/* Replies */
+.reply-card {
+    margin-left: 20px;
+    border-left: 2px solid #4e004e; /* Accent line for threading */
+    padding-left: 16px;
+    background-color: #3d1c3d;
+}
+
+/* Pinned Posts */
+.pinned-card {
+    border: 2px solid #ffcc00; /* Highlight pinned posts */
+    background: #3d1c3d;
+}
+
+.pinned-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #ffcc00;
+    margin-bottom: 10px;
+}
+
+/* Reposts or Shared Posts */
+.repost-section {
+    display: flex;
+    gap: 12px;
+    background: #3d1c3d;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.repost-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.repost-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.repost-author {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffcc00;
+}
+
+.repost-text {
+    font-size: 0.85rem;
+    color: #b399ff;
+}
+
+/* Threads */
+.reply-thread {
+    margin-left: 20px;
+    padding-left: 10px;
+    border-left: 2px solid #4e004e;
+}
+
+#back-button-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000; /* Ensures it stays on top */
+}
+
+#back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4e004e; /* Dark purple background */
+    color: #ffcc00; /* Golden text for contrast */
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px solid #ffcc00;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#back-button:hover {
+    background-color: #ffcc00; /* Golden hover effect */
+    color: #4e004e; /* Dark purple text on hover */
+    transform: scale(1.05); /* Slight zoom effect */
+}

@@ -51,6 +51,18 @@ const createMainWindow = () => {
         mainWindow = null // dereference the window object when closed
     });
 
+    // mainWindow.webContents.on('will-navigate', (e, ustr, inPlace) => {
+    //     const u = isURL(ustr);
+    //     if (u.protocol === 'file:' && u.pathname === '/post') {
+    //         // e.preventDefault();
+    //         // const bskyid = u.searchParams.get('id');
+
+    //         // TODO: implement loading single post
+    //         // maybe move this logic to the page itself via ipc and just
+    //         // have this redirect to a file?
+    //     }
+    // });
+
     mainWindow.webContents.on('did-navigate', (_, url) => {
         mainWindow.webContents.executeJavaScript('document.title')
             .then(title => insertHistory(url, title));

@@ -4,6 +4,12 @@ const renderPosts = require('../JS/posts.cjs');
 const renderReplies = require('../JS/replies.cjs');
 const { displayUploadStatus, renderCompose } = require('../JS/compose.cjs');
 
+
+const disableTab = (tabid) => {
+    const el = document.querySelector(`#${tabid}Btn`);
+    el.outerHTML = '<button id="likesBtn" class="notallowed">Likes</button>'
+}
+
 async function handleFileDialogue(e) {
     try {
         const file = e.target.files[0];
@@ -46,11 +52,15 @@ const appendEOF = (divid) => {
 
 
 window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.endsWith('/post.html')) return require('../JS/singlepost.cjs')(ipcRenderer);
+
     renderCompose(ipcRenderer);
     const query = new URLSearchParams(window.location.search);
     const utag = query.get('profile') || '@me';
 
     ipcRenderer.on('udata', (e, dataRaw) => {
+        // REMOVE ALL CURSORS
+        sessionStorage.clear();
         setupMutationObserver();
 
         const data = JSON.parse(dataRaw),
@@ -71,7 +81,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         if (data.posts) renderPosts(data.posts, data.likes || [], pObj?.pinnedPost, ipcRenderer);
         if (data.replies) renderReplies(data.replies);
-        if (data.likes) renderPosts(data.likes, data.likes, null, ipcRenderer, 'bskylikeid', 'likes');
+        if (data.likes?.length) renderPosts(data.likes, data.likes, null, ipcRenderer, 'bskylikeid', 'likes');
+        else disableTab('likes');
         if (data.media) renderPosts(data.media.data, data.likes, null, ipcRenderer, 'bskymediaid', 'media');
     });
 
@@ -105,7 +116,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     ipcRenderer.on('posts', (e, rawData) => {
         const data = JSON.parse(rawData);
-        console.log(data);
 
         // reset all videos because the cache was cleared
         document.querySelectorAll('.post-card video').forEach(video => {
@@ -115,10 +125,12 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
         if (data.err) return alert(data.err);
-        if (data.feed) renderPosts(data.posts, data.likes?.map(o => ({ posturi: o.post.uri, likeuri: o.post.viewer?.like })), null, ipcRenderer);
+        if (data.posts.feed) renderPosts(data.posts.feed, data.likes?.feed, null, ipcRenderer);
 
-        if (data.cursor) sessionStorage.setItem('postcursor', data.cursor);
+        if (data.posts.cursor) sessionStorage.setItem('postcursor', data.posts.cursor);
         else sessionStorage.removeItem('postcursor');
+
+        if (data.likes.cursor) sessionStorage.setItem('likescursor', data.likes.cursor);
     });
 
     ipcRenderer.on('likes', (e, data) => {

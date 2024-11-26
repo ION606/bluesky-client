@@ -1,15 +1,18 @@
-
 /* zoom container styles */
 .zoom-container {
     top: 5vh;
     position: fixed;
     display: inline-block;
-    overflow: hidden;
+    /* overflow: hidden; */
     cursor: pointer;
     max-height: 90vh;
     max-width: 90vw;
     cursor: pointer;
     z-index: 9999;
+}
+
+.hidden {
+    display: none;
 }
 
 /* initial image styling */
@@ -20,6 +23,7 @@
     cursor: pointer;
     border-radius: 8px;
     border: solid 2px lightblue;
+    width: auto;
 }
 
 /* styles for full-screen zoomed view */

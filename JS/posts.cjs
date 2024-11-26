@@ -9,9 +9,10 @@ function zoomimg(e) {
 	zoomContainer.querySelector('img').style.display = '';
 
 	zoomContainer.querySelector('img').src = src;
-	zoomContainer.classList.toggle('zoomed');
 	overlayEl.classList.toggle('hidden');
-	overlayEl.classList.toggle('show');
+	zoomContainer.classList.toggle('zoomed');
+	zoomContainer.classList.toggle('hidden');
+
 	document.querySelector('.profile-container').classList.toggle('.noscroll');
 }
 
@@ -374,6 +375,8 @@ function setupWorker(name = 'bktemp') {
 	}
 }
 
+const statArr = [0, 0];
+
 /**
  * @param {*} post 
  * @param {*} a 
@@ -387,11 +390,19 @@ function renderPostSingle(post, a, likes, ipcRenderer, container, idkey = 'bskyi
 	const cardId = (post?.reply?.root?.uri || post.post.uri)?.trim();
 
 	// if the card exists, use it; otherwise, create a new card
-	if (a.has(cardId)) card = a.get(cardId);
+	if (a.has(cardId)) {
+		card = a.get(cardId);
+		statArr[0]++;
+	}
 	else {
 		card = document.createElement('div');
 		card.classList.add('post-card');
 		card.dataset[`${idkey}`] = cardId;
+		card.onclick = (e) => {
+			if (e.target !== card && !e.target.classList.contains('post-text')) return;
+			window.location.href = `../HTML/post.html?id=${encodeURI(card.dataset[`${idkey}`])}`;
+		}
+		statArr[1]++;
 	}
 
 	// handle repost reason if it hasn't been added to this card
@@ -529,7 +540,7 @@ function renderPostSingle(post, a, likes, ipcRenderer, container, idkey = 'bskyi
 		card.appendChild(textContent);
 	}
 
-	// handle video embed (if present and not added yet)
+	// handle video embed
 	if (post.post.embed && post.post.embed.$type === 'app.bsky.embed.video#view' && !card.querySelector('.post-video')) {
 		const videoContainer = createVideoEl(), videoPlayer = videoContainer.querySelector('video');
 
@@ -599,11 +610,10 @@ function renderPostSingle(post, a, likes, ipcRenderer, container, idkey = 'bskyi
 			const linkElement = document.createElement('a');
 			linkElement.classList.add('external-embed-link');
 			linkElement.href = embed.uri;
-			linkElement.target = '_blank'; // opens in a new tab
-			linkElement.rel = 'noopener noreferrer'; // improves security
+			linkElement.target = '_blank';
+			linkElement.rel = 'noopener noreferrer'; // improves security (apparently)
 			linkElement.textContent = 'Visit';
 
-			// append elements to the container
 			embedContainer.appendChild(titleElement);
 			embedContainer.appendChild(descriptionElement);
 			embedContainer.appendChild(linkElement);
@@ -622,7 +632,7 @@ function renderPostSingle(post, a, likes, ipcRenderer, container, idkey = 'bskyi
 
 	// add the card to the container if it's a new card
 	if (!a.has(cardId)) {
-		const lurl = likes.find(o => (o.posturi === cardId));
+		const lurl = likes?.find(o => (o.posturi === cardId));
 		if (lurl) card.dataset.likeuri = lurl.likeuri;
 		card.appendChild(createButtonEls(card, ipcRenderer, idkey, containerid));
 		container.appendChild(card);
@@ -652,12 +662,15 @@ module.exports = function renderPosts(posts, likes, pinnedPost, ipcRenderer, idk
 		a = new Map();
 	}
 
+	statArr[0] = 0;
+	statArr[1] = 0;
+
 	for (const post of posts) {
 		try {
 			renderPostSingle(
 				post,
 				a,
-				likes.map(o => ({ posturi: o.post.uri, likeuri: o.post.viewer?.like })),
+				likes?.map(o => ({ posturi: o.post.uri, likeuri: o.post.viewer?.like })),
 				ipcRenderer,
 				container,
 				idkey,
@@ -669,8 +682,10 @@ module.exports = function renderPosts(posts, likes, pinnedPost, ipcRenderer, idk
 		}
 	}
 
-	const postids = Array.from(document.querySelectorAll(`[data-${idkey}]`)).map(o => o.dataset[`${idkey} `]);
-	console.log(postids);
+	console.info(`added ${statArr[1]} and updated ${statArr[0]} posts in "${containerid}"!`);
+
+	// const postids = Array.from(document.querySelectorAll(`[data-${idkey}]`)).map(o => o.dataset[`${idkey} `]);
+	// console.log('duplicate ids', postids);
 
 	// "force" garbage collection
 	// delete a;

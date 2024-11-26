@@ -95,7 +95,7 @@ function togglerelaxed(e) {
         container.classList.remove('cards-container-relaxed');
         container.classList.add('cards-container');
     } else {
-        container.style.gridTemplateColumns = (value !== 'large') ? 'repeat(auto-fill, minmax(280px, 1fr))' : '';
+        container.style.gridTemplateColumns = (value?.trim() !== 'large') ? 'repeat(auto-fill, minmax(280px, 1fr))' : 'none';
         container.classList.remove('cards-container');
         container.classList.add('cards-container-relaxed');
     }

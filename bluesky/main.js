@@ -127,7 +127,8 @@ async function getUserData(utag, allData = false) {
 
         if (allData) {
             const { data: { feed, cursor } } = await agent.getAuthorFeed({ actor: output.profile.did, limit: 20, includePins: true }),
-                { data: { feed: likes, cursor: likesCursor } } = await agent.getActorLikes({ actor: did });
+                { data: { feed: likes, cursor: likesCursor } } = await agent.getActorLikes({ actor: output.profile.did })
+                    .catch(err => ({ data: { feed: [], cursor: undefined } }));
 
             output.likes = likes;
             output.likesCursor = likesCursor;
@@ -140,7 +141,8 @@ async function getUserData(utag, allData = false) {
 
         return output;
     } catch (err) {
-        logger.error('failed to fetch user data:', err);
+        console.error(err);
+        logger.error(`failed to fetch user data for ${utag}:`);
         return {};
     }
 }
@@ -151,14 +153,24 @@ export const getPosts = async (utag, cursor = undefined, likesCursor = undefined
         const did = await getDID(utag);
         if (!did) return { err: 'DID not found!' };
 
-        const likes = await agent.getActorLikes({ actor: did, cursor: likesCursor }),
-            posts = await agent.getAuthorFeed({ actor: did, limit: 20, includePins: true, cursor });
-        return { posts, likes };
+        const likes = await agent.getActorLikes({ actor: did, cursor: likesCursor }).catch(_ => ({ data: [] })),
+            posts = await agent.getAuthorFeed({ actor: did, limit: 30, includePins: true, cursor });
+        return { posts: posts.data, likes: likes.data };
     }
     catch (err) {
         console.error(err);
-        return { err: 'internal server error!' }
+        return { err: `internal server error for "${utag}"!` }
     }
+}
+
+
+export const getPost = async (e, bskyid) => {
+    if (!bskyid) return 404;
+
+    const [, did, collection, rkey] = bskyid.match(/^at:\/\/([^\/]+)\/([^\/]+)\/(.+)$/),
+        post = await agent.getPost({ repo: did, rkey, collection });
+
+    return (await agent.getPostThread({ uri: post.uri, depth: 3 })).data.thread;
 }
 
 
@@ -269,5 +281,7 @@ export async function setupIPC() {
     ipcMain.handle('new-post', post);
     ipcMain.handle('upload-file', handleFileOpen);
     ipcMain.handle('post-action', async (e, action, id, condition) => await handlePostAction(e, action, id, agent, condition));
+
+    ipcMain.handle('get-post-single', getPost);
 }
 
